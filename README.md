@@ -1,87 +1,151 @@
-# Google Apps Script Dev Container Project
+# **GS-DocToMD**
 
-This repository provides a complete, pre-configured development environment for Google Apps Script using **VS Code Dev Containers**. It allows any developer to start coding immediately with all tools, extensions, and configurations (including Git authentication) set up automatically.
+**DocToMD** is a lightweight Google Apps Script web application designed to convert rich text (such as content copied from Google Docs or MS Word) into clean Markdown format.
 
-## Features
+This tool streamlines the documentation process by allowing you to draft in a rich-text environment and instantly convert your work for Markdown-supported platforms (GitHub, Obsidian, Notion, etc.).
 
-This environment comes pre-configured with:
+## **🎥 Demo**
 
-- **Node.js v20:** A stable environment for running your tools.
-- **Google `clasp`:** The official command-line tool for Google Apps Script is pre-installed globally.
-- **GAS Autocomplete:** `npm` packages for `@types/google-apps-script` are included in `package.json` to provide full IntelliSense and autocomplete for Apps Script services (like `SpreadsheetApp`).
-- **Seamless Git Auth:** The container automatically and securely mounts your local **`.ssh`** keys and **`.gitconfig`**. You can `git push` and `git pull` from inside the container without any setup.
-- **Pre-installed VS Code Extensions:**
-  - **ESLint:** For code linting and finding errors.
-  - **Prettier:** For automatic code formatting.
-  - **Material Icon Theme:** For easier file navigation.
-- **VS Code Settings:**
-  - `*.gs` files are automatically recognized as JavaScript.
-  - **Format on Save** is enabled by default.
+_Paste your text, click convert, and it's copied to your clipboard instantly._
 
-## Prerequisites
+## **🚀 Features**
 
-To use this project, you must have the following installed on your local machine:
+- **Simple Web Interface:** A clean UI to paste your content.
 
-1.  **Visual Studio Code**
-2.  **Docker Desktop** (or another compatible container runtime)
-3.  The [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VS Code.
-4.  Your host machine must have its `~/.ssh` keys and `~/.gitconfig` file set up for this to work.
+- **Instant Conversion:** Converts headings, lists, bold, italic, and links into standard Markdown.
 
-## Getting Started
+- **One-Click Copy:** Automatically copies the converted Markdown to your system clipboard.
 
-1.  **Clone this Repository**
+- **Google Apps Script:** Runs entirely in the cloud; no local server required after deployment.
 
-    ```bash
-    git clone [https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git](https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git)
-    cd YOUR-REPOSITORY
-    ```
+## **🐳 Development Environment (Dev Container)**
 
-2.  **Open in Dev Container**
+This repository is configured with a **Dev Container**. This is the recommended way to develop, as it automatically sets up the environment with Node.js, npm, and Clasp installed.
 
-    - Open the project folder in VS Code.
-    - A pop-up will appear in the bottom-right corner: "Folder contains a Dev Container configuration file. Reopen in Container?"
-    - Click **"Reopen in Container"**. (The first time you do this, it will take a minute to build the container).
+**Requirements for Dev Container:**
 
-3.  **Log in to `clasp` (One-Time Setup)**
-    - Run the `clasp login` command
-      ```bash
-      clasp login
-      ```
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-You are now authenticated and ready to work!
+- [Visual Studio Code](https://code.visualstudio.com/)
 
-## Common Workflow
+- [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) for VS Code
 
-All commands are run from the VS Code terminal.
+## **🛠 Prerequisites (Manual Setup)**
 
-### To Create a New Project
+If you are **not** using the Dev Container, ensure you have the following installed on your local machine:
 
-1.  Create your code locally (e.g., `Code.gs`, `appsscript.json`).
-2.  Run `clasp create` to make a new project on Google Drive and link it:
-    ```bash
-    PROJECT_NAME="YOUR_PROJECT_NAME"
-    ```
-    ```bash
-    clasp create --title $PROJECT_NAME --rootDir ./src
-    clasp push
-    ```
+- **Node.js & npm**
 
-### To Link an Existing Project
+- **Google Clasp** (Command Line Apps Script Projects)
 
-1.  Go to your Apps Script project's **Settings** ⚙️ and copy the **Script ID**.
-2.  Run `clasp clone` to pull the code:
-    ```bash
-    SCRIPT_ID="YOUR_SCRIPT_ID"
-    clasp clone $SCRIPT_ID --rootDir ./src
-    ```
+```bash
+npm install @google/clasp -g
+```
 
-### To Push/Pull Changes
+- A **Google Account**.
 
-- **Upload** your local code to the cloud:
-  ```bash
-  clasp push
-  ```
-- **Download** cloud code to your local machine:
-  ```bash
-  clasp pull
-  ```
+## **📥 Installation & Setup**
+
+### **Option A: Using Dev Container (Recommended)**
+
+1. Clone the repository and open the folder in VS Code.
+
+   ```bash
+   git clone [https://github.com/JunghunLeePhD/GS-DocToMD.git](https://github.com/JunghunLeePhD/GS-DocToMD.git)
+   cd GS-DocToMD
+   ```
+
+2. When prompted by VS Code, click **"Reopen in Container"** (or run the command `Dev Containers: Reopen in Container`from the Command Palette).
+
+3. Wait for the container to build. Once inside, the terminal will already have `clasp` installed.
+
+4. Proceed to step 2 below (Login).
+
+### **Option B: Manual Installation**
+
+1. Clone the repository:
+
+   ```bash
+   git clone [https://github.com/JunghunLeePhD/GS-DocToMD.git](https://github.com/JunghunLeePhD/GS-DocToMD.git)
+   cd GS-DocToMD
+   ```
+
+2. Ensure `clasp` is installed globally (see Prerequisites above).
+
+### **2. Login to Clasp**
+
+Regardless of whether you use the Dev Container or manual setup, you must authenticate `clasp` with your Google account.
+
+```bash
+clasp login
+```
+
+_Note: If running in a Dev Container, click the link provided in the terminal to authenticate in your local browser._
+
+### **3. Create and Push the Project**
+
+Create a new Google Apps Script project linked to the `./src` directory and upload the codes.
+
+```bash
+clasp create --title "DocToMD" --rootDir ./src
+clasp push
+```
+
+## **☁️ Deployment**
+
+Once the code is pushed, you need to deploy it as a Web App.
+
+1. Navigate to the [Google Apps Script Dashboard](https://script.google.com/home).
+
+2. Locate and click on the project named **"DocToMD"**.
+
+3. In the editor, click on the blue **Deploy** button in the top right corner.
+
+4. Select **New deployment**.
+
+5. Click the "Select type" (gear icon) and choose **Web app**.
+
+6. Configure the following:
+
+   - **Description:** (Optional, e.g., "Initial Deploy")
+
+   - **Execute as:** `Me` (your email)
+
+   - **Who has access:** `Anyone` (or `Myself` if you want it private)
+
+7. Click **Deploy**.
+
+8. Copy the **Web app URL** provided in the success message.
+
+## **📖 Usage**
+
+1. Open the **Web app URL** in your browser.
+
+2. **Copy** your formatted text (from a Google Doc, website, or Word document).
+
+3. **Paste** the text into the input area on the website.
+
+4. Click the **Convert** (or specific action) button.
+
+5. The text is converted to Markdown and automatically copied to your **pasteboard**.
+
+6. Paste your new Markdown content wherever you need it!
+
+## **📂 File Structure**
+
+The project source code is located in the `src` directory to keep the root clean.
+
+```
+GS-DocToMD/
+├── .devcontainer/
+│   └── devcontainer.json  # Configuration for VS Code Dev Container
+├── src/
+│   ├── Code.js            # Server-side Google Apps Script logic
+│   ├── index.html         # Main HTML structure for the Web App
+│   ├── stylesheet.html    # CSS styles (included via include function)
+│   ├── javascript.html    # Client-side JavaScript (logic for DOM & Clipboard)
+│   └── appsscript.json    # Project manifest and configuration
+├── .clasp.json            # Clasp configuration (generated after create)
+├── demo.gif               # Demo animation
+└── README.md              # Project documentation
+```
