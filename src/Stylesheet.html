@@ -45,4 +45,27 @@
     color: var(--text);
     text-align: center;
   }
+
+  #pasteArea {
+    flex: 1;
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    overflow-y: auto;
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 300px;
+    font-size: 1rem;
+  }
+
+  #pasteArea:focus {
+    border-color: var(--primary);
+  }
+
+  #pasteArea[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #94a3b8;
+    cursor: text;
+  }
 </style>
