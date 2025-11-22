@@ -1,10 +1,49 @@
 <style>
   :root {
+    /* Light Mode Defaults */
     --primary: #2563eb;
+    --primary-hover: #1d4ed8;
     --bg: #f8fafc;
     --surface: #ffffff;
     --text: #1e293b;
     --border: #e2e8f0;
+    --input-bg: #ffffff;
+    --placeholder: #94a3b8;
+    --shadow: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Dark Mode Overrides (System Default) */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; /* Slate 900 */
+      --surface: #1e293b; /* Slate 800 */
+      --text: #f1f5f9; /* Slate 100 */
+      --border: #334155; /* Slate 700 */
+      --input-bg: #020617; /* Slate 950 */
+      --placeholder: #475569;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  /* Manual Override Class (for the toggle button) */
+  body.dark-mode {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --text: #f1f5f9;
+    --border: #334155;
+    --input-bg: #020617;
+    --placeholder: #475569;
+    --shadow: rgba(0, 0, 0, 0.5);
+  }
+
+  body.light-mode {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --border: #e2e8f0;
+    --input-bg: #ffffff;
+    --placeholder: #94a3b8;
+    --shadow: rgba(0, 0, 0, 0.1);
   }
 
   body {
@@ -16,47 +55,75 @@
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center; /* Centered properly */
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .container {
     width: 100%;
     max-width: 800px;
-    margin: 40px 20px;
+    margin: 20px;
     background: var(--surface);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px var(--shadow);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    height: 80vh;
+    height: 70vh; /* Fixed height for demo */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   h1 {
-    text-align: center;
     color: var(--primary);
     margin: 0;
     font-size: 1.5rem;
   }
 
+  .theme-toggle {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    box-shadow: none;
+  }
+
+  .theme-toggle:hover {
+    background: var(--bg);
+    transform: translateY(0);
+  }
+
   .label {
     font-weight: 600;
     color: var(--text);
-    text-align: center;
+    text-align: left;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
   }
 
+  /* Updated: Uses variable for background instead of 'white' */
   #pasteArea {
     flex: 1;
     padding: 1.5rem;
     border: 2px solid var(--border);
     border-radius: 8px;
     overflow-y: auto;
-    background: white;
+    background: var(--input-bg);
+    color: var(--text);
     outline: none;
-    transition: border-color 0.2s;
-    min-height: 300px;
+    transition: border-color 0.2s, background-color 0.3s ease;
     font-size: 1rem;
+    line-height: 1.6;
   }
 
   #pasteArea:focus {
@@ -65,22 +132,23 @@
 
   #pasteArea[placeholder]:empty:before {
     content: attr(placeholder);
-    color: #94a3b8;
+    color: var(--placeholder);
     cursor: text;
   }
 
   .actions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 10px;
   }
 
   button {
     background-color: var(--primary);
     color: white;
     border: none;
-    padding: 16px 32px;
+    padding: 12px 24px;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -91,7 +159,7 @@
   }
 
   button:hover {
-    opacity: 0.9;
+    background-color: var(--primary-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
   }
@@ -100,23 +168,35 @@
     transform: translateY(0);
   }
 
+  button.secondary {
+    background-color: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: none;
+  }
+
+  button.secondary:hover {
+    background-color: var(--bg);
+  }
+
   /* Toast Notification */
   #toast {
     visibility: hidden;
     min-width: 250px;
-    background-color: #333;
-    color: #fff;
+    background-color: var(--text); /* Inverted for contrast */
+    color: var(--bg);
     text-align: center;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 16px;
     position: fixed;
     z-index: 1;
     left: 50%;
     bottom: 30px;
     transform: translateX(-50%);
-    font-size: 1rem;
+    font-size: 0.95rem;
     opacity: 0;
     transition: opacity 0.3s, bottom 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 
   #toast.show {
