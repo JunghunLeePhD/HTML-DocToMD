@@ -32,6 +32,98 @@
    * Recursive function to convert HTML DOM nodes to Markdown
    */
   function parseNode(node) {
-    return node;
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.textContent;
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return "";
+    }
+
+    let content = "";
+    // Recursively process child nodes
+    for (let child of node.childNodes) {
+      content += parseNode(child);
+    }
+
+    // Handle Google Docs specific nesting and standard HTML tags
+    const style = window.getComputedStyle(node);
+    const fontWeight = style.fontWeight;
+    const fontStyle = style.fontStyle;
+    const tagName = node.tagName.toLowerCase();
+
+    // --- Formatting Wrappers ---
+
+    // Bold
+    if (
+      tagName === "b" ||
+      tagName === "strong" ||
+      parseInt(fontWeight) >= 700
+    ) {
+      if (!content.startsWith("**")) content = `**${content}**`;
+    }
+
+    // Italic
+    if (tagName === "i" || tagName === "em" || fontStyle === "italic") {
+      if (!content.startsWith("*")) content = `*${content}*`;
+    }
+
+    // Strikethrough
+    if (
+      style.textDecorationLine.includes("line-through") ||
+      tagName === "s" ||
+      tagName === "strike"
+    ) {
+      content = `~~${content}~~`;
+    }
+
+    // Links
+    if (tagName === "a" && node.href) {
+      return `[${content}](${node.href})`;
+    }
+
+    // --- Block Elements ---
+
+    if (tagName === "p" || tagName === "div") {
+      if (content.trim() === "") return "\n";
+      return content + "\n\n";
+    }
+
+    if (tagName === "br") {
+      return "\n";
+    }
+
+    // Headings
+    if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(tagName)) {
+      const level = parseInt(tagName.substring(1));
+      return `${"#".repeat(level)} ${content}\n\n`;
+    }
+
+    // Lists
+    if (tagName === "li") {
+      const parent = node.parentElement;
+      if (parent.tagName.toLowerCase() === "ol") {
+        return `1. ${content}\n`;
+      } else {
+        return `- ${content}\n`;
+      }
+    }
+
+    if (tagName === "ul" || tagName === "ol") {
+      return content + "\n";
+    }
+
+    // Tables (Simple)
+    if (tagName === "tr") {
+      return `|${content}\n`;
+    }
+    if (tagName === "td" || tagName === "th") {
+      return ` ${content.trim()} |`;
+    }
+    if (tagName === "table") {
+      return "\n" + content + "\n";
+    }
+
+    return content;
   }
 </script>
