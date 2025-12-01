@@ -1,5 +1,8 @@
 function doGet() {
-  return HtmlService.createTemplateFromFile("Index").evaluate();
+  return HtmlService.createTemplateFromFile("Index")
+    .evaluate()
+    .setTitle("DocToMD")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 function include(filename) {
